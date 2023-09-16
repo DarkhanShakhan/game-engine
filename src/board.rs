@@ -93,6 +93,7 @@ impl Board {
                 }
             }
         }
+        self.tick += 1;
     }
 }
 
@@ -121,6 +122,7 @@ impl Default for Board {
         board.add_city(City::new(Owner::Neutral, 200, 300));
         board.add_city(City::new(Owner::Neutral, 600, 300));
         board.add_city(City::new(Owner::Neutral, 500, 400));
+        board.add_city(City::new(Owner::Neutral, 300, 400));
         board.add_city(City::new(Owner::Neutral, 400, 100));
         board
     }
