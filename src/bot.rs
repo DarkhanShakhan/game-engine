@@ -1,4 +1,5 @@
 use std::{
+    fmt::write,
     io::{BufRead, BufReader, BufWriter, Write},
     process::{Command, Stdio},
 };
@@ -27,21 +28,28 @@ impl Bot {
         }
     }
 
-    pub fn send_board(&mut self, board: &[[&str; 3]; 3]) {
-        for row in board.iter() {
-            writeln!(self.writer, "{},{},{}", row[0], row[1], row[2]).unwrap();
-        }
+    pub fn send_board(&mut self, board: &str) {
+        write!(self.writer, "{board}").unwrap();
         self.writer.flush().unwrap();
     }
 
-    pub fn get_move(&mut self) -> (usize, usize) {
+    pub fn get_move(&mut self) -> Option<(usize, usize, usize, usize)> {
         let mut move_str = String::new();
         self.reader.read_line(&mut move_str).unwrap();
+        if move_str.trim().is_empty() {
+            return None;
+        }
         let coords: Vec<usize> = move_str
             .trim()
-            .split(',')
+            .split(' ')
             .map(|x| x.parse().unwrap())
             .collect();
-        (coords[0], coords[1])
+        Some((coords[0], coords[1], coords[2], coords[3]))
+    }
+}
+
+impl Drop for Bot {
+    fn drop(&mut self) {
+        self.child.kill().unwrap();
     }
 }
