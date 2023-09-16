@@ -1,32 +1,38 @@
 use std::fmt::Display;
 
+use crate::city::City;
+
 pub struct Movement {
-    from: String,
-    to: String,
-    player_from: String,
-    player_to: String,
+    pub from_city: String,
+    pub from_owner: String,
+    pub to_city: String,
+    pub to_owner: String,
     ticks_to_finish: i32,
-    units: i32,
+    pub units: i32,
 }
 
 impl Movement {
-    pub fn new(
-        from: &str,
-        to: &str,
-        player_from: &str,
-        player_to: &str,
-        ticks_to_finish: i32,
-        units: i32,
-    ) -> Self {
+    pub fn new(from: &City, to: &City) -> Self {
         Movement {
-            from: from.to_string(),
-            to: to.to_string(),
-            player_from: player_from.to_string(),
-            player_to: player_to.to_string(),
-            ticks_to_finish,
-            units,
+            from_city: from.name.clone(),
+            from_owner: from.owner.to_string(),
+            to_city: to.name.clone(),
+            to_owner: to.owner.to_string(),
+            ticks_to_finish: ticks((from.x, from.y), (to.x, to.y)),
+            units: from.units,
         }
     }
+    pub fn tick(&mut self) {
+        self.ticks_to_finish -= 1;
+    }
+    pub fn is_complete(&self) -> bool {
+        self.ticks_to_finish == 0
+    }
+}
+
+fn ticks(from: (i32, i32), to: (i32, i32)) -> i32 {
+    let distance = (((from.0 - to.0).pow(2) + (from.1 - to.1).pow(2)) as f32).sqrt();
+    (distance / 50.0).ceil() as i32
 }
 
 impl Display for Movement {
@@ -34,7 +40,12 @@ impl Display for Movement {
         writeln!(
             f,
             "{} {} {} {} {} {}",
-            self.from, self.to, self.player_from, self.player_to, self.ticks_to_finish, self.units
+            self.from_city,
+            self.to_city,
+            self.from_owner,
+            self.to_owner,
+            self.ticks_to_finish,
+            self.units
         )
     }
 }
@@ -44,7 +55,9 @@ mod movement_tests {
     use super::*;
     #[test]
     fn test_display() {
-        let m = Movement::new("city1", "city2", "player1", "player2", 3, 5);
-        assert_eq!(m.to_string(), "city1 city2 player1 player2 3 5\n")
+        let city_from = City::new(crate::city::Owner::Player1("p1".to_string()), 100, 120);
+        let city_to = City::new(crate::city::Owner::Neutral, 120, 100);
+        let m = Movement::new(&city_from, &city_to);
+        assert_eq!(m.to_string(), "100120 120100 p1 Neutral 2 10\n")
     }
 }

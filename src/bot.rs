@@ -1,5 +1,4 @@
 use std::{
-    fmt::write,
     io::{BufRead, BufReader, BufWriter, Write},
     process::{Command, Stdio},
 };

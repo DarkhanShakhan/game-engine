@@ -131,8 +131,8 @@ while True:
     
     my_city_count = count_cities_by_owner(cities, 'p1')
     opponent_city_count = count_cities_by_owner(cities, 'Neutral')
-    print(f"Number of my cities: {my_city_count}", file=sys.stderr, flush=True)
-    print(f"Number of opponent's cities: {opponent_city_count}", file=sys.stderr, flush=True)
+    # print(f"Number of my cities: {my_city_count}", file=sys.stderr, flush=True)
+    # print(f"Number of opponent's cities: {opponent_city_count}", file=sys.stderr, flush=True)
     if my_city_count>2:
         print(str(second_closest_city['x'])+" "+str(second_closest_city['y'])+" "+str(closest_city['x'])+" "+str(closest_city['y']),file=sys.stderr, flush=True)
 
@@ -146,7 +146,7 @@ while True:
             print(my_city, type(my_city), file=sys.stderr, flush=True)
     # this will choose one of random actions
     if nearest_city :
-        if my_city['units']>nearest_city['units']:
+        if my_city['units']>=nearest_city['units']:
             print(str(my_city['x'])+" "+str(my_city['y'])+" "+str(nearest_city['x'])+" "+str(nearest_city['y']), flush=True)
 
         else:

@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{collections::HashMap, fmt::Display};
 
 use crate::{
     city::{City, Owner},
@@ -7,7 +7,7 @@ use crate::{
 
 pub struct Board {
     pub city_num: i32,
-    pub cities: Vec<City>,
+    pub cities: HashMap<String, City>,
     pub tick: u32,
     pub current_player: String,
     pub move_num: i32,
@@ -18,7 +18,7 @@ impl Board {
     pub fn new() -> Self {
         Board {
             city_num: 0,
-            cities: vec![],
+            cities: HashMap::new(),
             tick: 0,
             current_player: String::new(),
             move_num: 0,
@@ -26,12 +26,12 @@ impl Board {
         }
     }
     pub fn add_city(&mut self, city: City) {
-        self.cities.push(city);
+        self.cities.insert(city.name.clone(), city);
         self.city_num += 1;
     }
 
     pub fn add_unit(&mut self) {
-        for city in &mut self.cities {
+        for city in &mut self.cities.values_mut() {
             match city.owner {
                 Owner::Neutral => {
                     if city.units < 10 {
@@ -47,21 +47,61 @@ impl Board {
         }
     }
 
-    pub fn add_move(&mut self, movement: Movement) {
-        self.moves.push(movement);
-        self.move_num += 1;
+    pub fn add_move(&mut self, player: Owner, city_from: &str, city_to: &str) {
+        if city_from == city_to {
+            return;
+        }
+        if let Some(from) = self.cities.get(city_from) {
+            if from.owner != player {
+                return;
+            }
+            if let Some(to) = self.cities.get(city_to) {
+                self.moves.push(Movement::new(from, to));
+                self.move_num += 1;
+                self.cities
+                    .entry(city_from.to_string())
+                    .and_modify(|c| c.units = 0);
+            }
+        }
+    }
+    pub fn tick(&mut self) {
+        self.add_unit();
+        for mv in &mut self.moves {
+            //TODO: remove from movements
+            //TODO: modify if the city is captured
+            if mv.is_complete() {
+                continue;
+            }
+            mv.tick();
+            if mv.is_complete() {
+                self.move_num -= 1;
+                if let Some(to) = self.cities.get_mut(&mv.to_city) {
+                    if to.owner == Owner::Player1(mv.from_owner.clone()) {
+                        to.units += mv.units;
+                    } else {
+                        let diff = mv.units - to.units;
+                        if diff >= 0 {
+                            to.owner = Owner::Player1(mv.from_owner.clone())
+                        }
+                        to.units = diff.abs();
+                    }
+                }
+            }
+        }
     }
 }
 
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut out = format!("{} {} {}\n", self.city_num, self.current_player, self.tick);
-        for city in &self.cities {
+        for city in self.cities.values() {
             out += &city.to_string()
         }
         out += &format!("{}\n", self.move_num);
         for movement in &self.moves {
-            out += &movement.to_string()
+            if !movement.is_complete() {
+                out += &movement.to_string()
+            }
         }
         write!(f, "{}", out)
     }
@@ -73,14 +113,16 @@ mod board_tests {
     #[test]
     fn test_display() {
         let mut board = Board::new();
-        board.add_city(City::new(crate::city::Owner::Neutral, 200, 150));
-        board.add_move(Movement::new(
-            "200150", "100510", "player_1", "neutral", 5, 15,
-        ));
-        board.current_player = "player_1".to_string();
+        let city_1 = City::new(Owner::Neutral, 200, 150);
+        let city_2 = City::new(Owner::Player1("p1".to_string()), 150, 200);
+        board.add_city(city_2);
+        board.add_city(city_1);
+        board.add_move(Owner::Player1("p1".to_string()), "150-200", "200-150");
+        board.add_move(Owner::Player1("p1".to_string()), "170-200", "200-150");
+        board.current_player = "p1".to_string();
         assert_eq!(
             board.to_string(),
-            "1 player_1 0\nNeutral 10 200150 200 150 0 0\n1\n200150 100510 player_1 neutral 5 15\n"
+            "2 p1 0\np1 10 150-200 150 200 0 0\nNeutral 10 200-150 200 150 0 0\n1\n150-200 200-150 p1 Neutral 4 10\n"
         );
         print!("{}", board);
     }

@@ -15,7 +15,7 @@ impl City {
         City {
             owner,
             units: 10,
-            name: x.to_string() + &y.to_string(),
+            name: x.to_string() + "-" + &y.to_string(),
             x,
             y,
             a: 0,
@@ -49,6 +49,7 @@ mod city_tests {
         );
     }
 }
+#[derive(PartialEq)]
 pub enum Owner {
     Player1(String),
     Player2(String),
