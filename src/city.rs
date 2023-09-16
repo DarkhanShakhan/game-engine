@@ -44,23 +44,21 @@ mod city_tests {
             "Neutral 10 150200 150 200 0 0\n"
         );
         assert_eq!(
-            City::new(Owner::Player1("pl1".to_owned()), 180, 210).to_string(),
+            City::new(Owner::Player("pl1".to_owned()), 180, 210).to_string(),
             "pl1 10 180210 180 210 0 0\n"
         );
     }
 }
 #[derive(PartialEq)]
 pub enum Owner {
-    Player1(String),
-    Player2(String),
+    Player(String),
     Neutral,
 }
 
 impl Display for Owner {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Player1(name) => write!(f, "{}", name),
-            Self::Player2(name) => write!(f, "{}", name),
+            Self::Player(name) => write!(f, "{}", name),
             Self::Neutral => write!(f, "Neutral"),
         }
     }
@@ -71,8 +69,7 @@ mod owner_tests {
     use super::*;
     #[test]
     fn test_display() {
-        assert_eq!(Owner::Player1("Player1".to_owned()).to_string(), "Player1");
-        assert_eq!(Owner::Player2("p2".to_owned()).to_string(), "p2");
+        assert_eq!(Owner::Player("Player1".to_owned()).to_string(), "Player1");
         assert_eq!(Owner::Neutral.to_string(), "Neutral");
     }
 }

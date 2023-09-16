@@ -55,7 +55,7 @@ mod movement_tests {
     use super::*;
     #[test]
     fn test_display() {
-        let city_from = City::new(crate::city::Owner::Player1("p1".to_string()), 100, 120);
+        let city_from = City::new(crate::city::Owner::Player("p1".to_string()), 100, 120);
         let city_to = City::new(crate::city::Owner::Neutral, 120, 100);
         let m = Movement::new(&city_from, &city_to);
         assert_eq!(m.to_string(), "100120 120100 p1 Neutral 2 10\n")

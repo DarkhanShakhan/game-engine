@@ -46,7 +46,12 @@ impl Board {
             }
         }
     }
-
+    pub fn set_city_owner(&mut self, city_name: &str, owner: Owner) {
+        if let Some(c) = self.cities.get_mut(city_name) {
+            c.owner = owner;
+            c.units = 0;
+        }
+    }
     pub fn add_move(&mut self, player: Owner, city_from: &str, city_to: &str) {
         if city_from == city_to {
             return;
@@ -76,12 +81,12 @@ impl Board {
             if mv.is_complete() {
                 self.move_num -= 1;
                 if let Some(to) = self.cities.get_mut(&mv.to_city) {
-                    if to.owner == Owner::Player1(mv.from_owner.clone()) {
+                    if to.owner == Owner::Player(mv.from_owner.clone()) {
                         to.units += mv.units;
                     } else {
                         let diff = mv.units - to.units;
                         if diff >= 0 {
-                            to.owner = Owner::Player1(mv.from_owner.clone())
+                            to.owner = Owner::Player(mv.from_owner.clone())
                         }
                         to.units = diff.abs();
                     }
@@ -107,6 +112,20 @@ impl Display for Board {
     }
 }
 
+impl Default for Board {
+    fn default() -> Self {
+        let mut board = Board::new();
+        board.add_city(City::new(Owner::Neutral, 400, 500));
+        board.add_city(City::new(Owner::Neutral, 300, 200));
+        board.add_city(City::new(Owner::Neutral, 500, 200));
+        board.add_city(City::new(Owner::Neutral, 200, 300));
+        board.add_city(City::new(Owner::Neutral, 600, 300));
+        board.add_city(City::new(Owner::Neutral, 500, 400));
+        board.add_city(City::new(Owner::Neutral, 400, 100));
+        board
+    }
+}
+
 #[cfg(test)]
 mod board_tests {
     use super::*;
@@ -114,11 +133,11 @@ mod board_tests {
     fn test_display() {
         let mut board = Board::new();
         let city_1 = City::new(Owner::Neutral, 200, 150);
-        let city_2 = City::new(Owner::Player1("p1".to_string()), 150, 200);
+        let city_2 = City::new(Owner::Player("p1".to_string()), 150, 200);
         board.add_city(city_2);
         board.add_city(city_1);
-        board.add_move(Owner::Player1("p1".to_string()), "150-200", "200-150");
-        board.add_move(Owner::Player1("p1".to_string()), "170-200", "200-150");
+        board.add_move(Owner::Player("p1".to_string()), "150-200", "200-150");
+        board.add_move(Owner::Player("p1".to_string()), "170-200", "200-150");
         board.current_player = "p1".to_string();
         assert_eq!(
             board.to_string(),
