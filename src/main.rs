@@ -1,14 +1,19 @@
 mod board;
 mod bot;
 mod city;
+mod game;
 mod movement;
+use std::{error::Error, time::Duration};
+
 use board::Board;
 use bot::Bot;
-
+use ui::crossterm::run;
+mod ui;
 use crate::city::Owner;
 
-fn main() {
-    simulate()
+fn main() -> Result<(), Box<dyn Error>> {
+    run(Duration::from_millis(45))?;
+    Ok(())
 }
 
 fn simulate() {
