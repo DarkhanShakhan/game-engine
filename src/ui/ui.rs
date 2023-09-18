@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 use tui::{
     backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
@@ -42,10 +44,25 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
 
 // fn draw_info()
 fn draw_stats<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
-    let text = vec![Spans::from(vec![Span::styled(
-        "Tick: 1",
-        Style::default().fg(Color::LightCyan),
-    )])];
+    let stats = game.stats();
+    let text = vec![Spans::from(vec![
+        Span::styled(
+            format!("tick: {} ", stats.tick),
+            Style::default().fg(Color::LightCyan),
+        ),
+        Span::styled(
+            format!("neutral: {} ", stats.neutral_count),
+            Style::default().fg(Color::LightGreen),
+        ),
+        Span::styled(
+            format!("player1: {} ", stats.player_1_count),
+            Style::default().fg(Color::LightMagenta),
+        ),
+        Span::styled(
+            format!("player2: {} ", stats.player_2_count),
+            Style::default().fg(Color::LightBlue),
+        ),
+    ])];
     let block = Block::default()
         .borders(Borders::ALL)
         .title("Stats")

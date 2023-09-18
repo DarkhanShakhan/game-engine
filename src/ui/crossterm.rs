@@ -62,7 +62,8 @@ fn run_game<B: Backend>(
                 }
             }
         }
-        if last_tick.elapsed() >= tick_rate {
+        if last_tick.elapsed() >= tick_rate && !game.is_finished() {
+            game.tick();
             last_tick = Instant::now();
         }
     }
