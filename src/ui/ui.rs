@@ -80,11 +80,28 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
                 .border_type(BorderType::Rounded),
         )
         .paint(|ctx| {
-            // ctx.draw(&Map {
-            //     color: Color::White,
-            //     resolution: MapResolution::High,
-            // });
-            // ctx.layer();
+            for m in &game.board.moves {
+                if !m.is_complete() {
+                    if let Some(from) = game.board.cities.get(&m.from_city) {
+                        if game.board.cities.get(&m.to_city).is_some() {
+                            ctx.draw(&Line {
+                                x1: ((from.x - 350) / 10) as f64 * 4.0,
+                                y1: ((from.y - 350) / 10) as f64 * 3.0,
+                                x2: ((m.x.ceil() - 350.0) / 10.0) * 4.0,
+                                y2: ((m.y.ceil() - 350.0) / 10.0) * 3.0,
+                                color: {
+                                    if m.from_owner == "p1" {
+                                        Color::LightMagenta
+                                    } else {
+                                        Color::LightBlue
+                                    }
+                                },
+                            })
+                        }
+                    }
+                }
+            }
+            ctx.layer();
             for c in game.board.cities.values() {
                 ctx.draw(&Rectangle {
                     x: ((c.x - 350) / 10) as f64 * 4.0,
@@ -108,29 +125,6 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
                     ((c.y - 350) / 10) as f64 * 3.0,
                     Spans::from(format!("{}", c.units)),
                 )
-            }
-            for m in &game.board.moves {
-                if !m.is_complete() {
-                    if let Some(from) = game.board.cities.get(&m.from_city) {
-                        if let Some(to) = game.board.cities.get(&m.to_city) {
-                            ctx.draw(&Line {
-                                x1: ((from.x - 350) / 10) as f64 * 4.0,
-                                y1: ((from.y - 350) / 10) as f64 * 3.0,
-                                x2: ((to.x - 350) / 10) as f64 * 4.0,
-                                y2: ((to.y - 350) / 10) as f64 * 3.0,
-                                color: if let Owner::Player(name) = &from.owner {
-                                    if name == "p1" {
-                                        Color::LightMagenta
-                                    } else {
-                                        Color::LightBlue
-                                    }
-                                } else {
-                                    Color::LightGreen
-                                },
-                            })
-                        }
-                    }
-                }
             }
         })
         .x_bounds([-180.0, 180.0])

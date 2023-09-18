@@ -3,6 +3,7 @@ use crate::{
     bot::Bot,
     city::{City, Owner},
 };
+pub mod position;
 
 pub struct Game {
     pub board: Board,
@@ -12,15 +13,10 @@ pub struct Game {
 impl Game {
     pub fn new() -> Self {
         let mut board = Board::default();
-        board.add_city(City::new(Owner::Neutral, 600, 600));
-        board.add_city(City::new(Owner::Neutral, 300, 600));
-        board.add_city(City::new(Owner::Neutral, 400, 600));
-        board.add_city(City::new(Owner::Neutral, 100, 200));
-        board.add_city(City::new(Owner::Neutral, 200, 100));
         let bot_2 = Bot::new("./bots/bot", "p2");
         let bot_1 = Bot::new("./bots/bot", "p1");
-        board.set_city_owner("400-100", Owner::Player("p1".to_string()));
-        board.set_city_owner("400-500", Owner::Player("p2".to_string()));
+        board.set_city_owner("100-100", Owner::Player("p1".to_string()));
+        board.set_city_owner("600-600", Owner::Player("p2".to_string()));
         Game {
             board,
             bots: vec![bot_1, bot_2],

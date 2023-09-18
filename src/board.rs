@@ -116,14 +116,11 @@ impl Display for Board {
 impl Default for Board {
     fn default() -> Self {
         let mut board = Board::new();
-        board.add_city(City::new(Owner::Neutral, 400, 500));
-        board.add_city(City::new(Owner::Neutral, 300, 200));
-        board.add_city(City::new(Owner::Neutral, 500, 200));
-        board.add_city(City::new(Owner::Neutral, 200, 300));
-        board.add_city(City::new(Owner::Neutral, 600, 300));
-        board.add_city(City::new(Owner::Neutral, 500, 400));
-        board.add_city(City::new(Owner::Neutral, 300, 400));
-        board.add_city(City::new(Owner::Neutral, 400, 100));
+        for ix in 1..=6 {
+            for jx in 1..=6 {
+                board.add_city(City::new(Owner::Neutral, ix * 100, jx * 100));
+            }
+        }
         board
     }
 }

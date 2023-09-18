@@ -7,23 +7,34 @@ pub struct Movement {
     pub from_owner: String,
     pub to_city: String,
     pub to_owner: String,
+    pub x: f64,
+    x_step: f64,
+    y_step: f64,
+    pub y: f64,
     ticks_to_finish: i32,
     pub units: i32,
 }
 
 impl Movement {
     pub fn new(from: &City, to: &City) -> Self {
+        let ticks = ticks((from.x, from.y), (to.x, to.y));
         Movement {
             from_city: from.name.clone(),
             from_owner: from.owner.to_string(),
             to_city: to.name.clone(),
             to_owner: to.owner.to_string(),
-            ticks_to_finish: ticks((from.x, from.y), (to.x, to.y)),
+            ticks_to_finish: ticks,
+            x: from.x as f64,
+            x_step: (to.x - from.x) as f64 / ticks as f64,
+            y: from.y as f64,
+            y_step: (to.y - from.y) as f64 / ticks as f64,
             units: from.units,
         }
     }
     pub fn tick(&mut self) {
         self.ticks_to_finish -= 1;
+        self.x += self.x_step;
+        self.y += self.y_step;
     }
     pub fn is_complete(&self) -> bool {
         self.ticks_to_finish == 0
