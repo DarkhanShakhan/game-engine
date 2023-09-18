@@ -95,33 +95,6 @@ impl Board {
         }
         self.tick += 1;
     }
-    pub fn ascii(&self) {
-        let mut out = vec![vec![' '; 80]; 70];
-        for c in self.cities.values() {
-            let center = ((c.y / 10) as usize, (c.x / 10) as usize);
-            out[center.0 + 1][center.1] = '-';
-            out[center.0 - 1][center.1] = '-';
-            // out[center.0 + 1][center.1 + 1] = '-';
-            // out[center.0 - 1][center.1 + 1] = '-';
-            out[center.0 + 1][center.1 - 1] = '-';
-            out[center.0 - 1][center.1 - 1] = '-';
-            out[center.0][center.1 + 1] = '|';
-            out[center.0][center.1 - 2] = '|';
-            out[center.0][center.1] = char::from_u32(48 + (c.units % 10) as u32).unwrap();
-            out[center.0][center.1 - 1] = char::from_u32(48 + (c.units / 10) as u32).unwrap()
-        }
-        let del = vec!['-'; 82].into_iter().collect::<String>();
-        let mut output = del.clone();
-        output.push('\n');
-        for row in out {
-            output.push('|');
-            output += &row.into_iter().collect::<String>();
-            output.push('|');
-            output.push('\n')
-        }
-        output += &(del + "\n");
-        print!("{}", output)
-    }
 }
 
 impl Display for Board {

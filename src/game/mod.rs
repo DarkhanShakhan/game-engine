@@ -1,4 +1,8 @@
-use crate::{board::Board, bot::Bot, city::Owner};
+use crate::{
+    board::Board,
+    bot::Bot,
+    city::{City, Owner},
+};
 
 pub struct Game {
     pub board: Board,
@@ -8,10 +12,15 @@ pub struct Game {
 impl Game {
     pub fn new() -> Self {
         let mut board = Board::default();
-        let bot_2 = Bot::new("./bot2/bot", "p2");
-        let bot_1 = Bot::new("./bot1/bot.py", "p1");
+        board.add_city(City::new(Owner::Neutral, 600, 600));
+        board.add_city(City::new(Owner::Neutral, 300, 600));
+        board.add_city(City::new(Owner::Neutral, 400, 600));
+        board.add_city(City::new(Owner::Neutral, 100, 200));
+        board.add_city(City::new(Owner::Neutral, 200, 100));
+        let bot_2 = Bot::new("./bots/bot", "p2");
+        let bot_1 = Bot::new("./bots/bot", "p1");
         board.set_city_owner("400-100", Owner::Player("p1".to_string()));
-        board.set_city_owner("600-300", Owner::Player("p2".to_string()));
+        board.set_city_owner("400-500", Owner::Player("p2".to_string()));
         Game {
             board,
             bots: vec![bot_1, bot_2],
@@ -35,7 +44,7 @@ impl Game {
         self.board.tick();
     }
     pub fn is_finished(&self) -> bool {
-        self.board.tick == 50
+        self.board.tick == 300
     }
     pub fn stats(&self) -> Stats {
         let mut stats = Stats {

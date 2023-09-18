@@ -109,6 +109,29 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
                     Spans::from(format!("{}", c.units)),
                 )
             }
+            for m in &game.board.moves {
+                if !m.is_complete() {
+                    if let Some(from) = game.board.cities.get(&m.from_city) {
+                        if let Some(to) = game.board.cities.get(&m.to_city) {
+                            ctx.draw(&Line {
+                                x1: ((from.x - 350) / 10) as f64 * 4.0,
+                                y1: ((from.y - 350) / 10) as f64 * 3.0,
+                                x2: ((to.x - 350) / 10) as f64 * 4.0,
+                                y2: ((to.y - 350) / 10) as f64 * 3.0,
+                                color: if let Owner::Player(name) = &from.owner {
+                                    if name == "p1" {
+                                        Color::LightMagenta
+                                    } else {
+                                        Color::LightBlue
+                                    }
+                                } else {
+                                    Color::LightGreen
+                                },
+                            })
+                        }
+                    }
+                }
+            }
         })
         .x_bounds([-180.0, 180.0])
         .y_bounds([-90.0, 90.0]);
