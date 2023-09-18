@@ -1,7 +1,7 @@
 use crate::{board::Board, bot::Bot, city::Owner};
 
 pub struct Game {
-    board: Board,
+    pub board: Board,
     bots: Vec<Bot>,
 }
 

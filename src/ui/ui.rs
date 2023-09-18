@@ -4,12 +4,16 @@ use tui::{
     backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Style},
+    symbols,
     text::{Span, Spans},
-    widgets::{Block, BorderType, Borders, Paragraph, Wrap},
+    widgets::{
+        canvas::{Canvas, Line, Map, MapResolution, Rectangle},
+        Block, BorderType, Borders, Paragraph, Wrap,
+    },
     Frame,
 };
 
-use crate::game::Game;
+use crate::{city::Owner, game::Game};
 
 pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
     let chunks = Layout::default()
@@ -24,14 +28,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
         )
         .split(f.size());
     draw_stats(f, game, chunks[0]);
-    f.render_widget(
-        Block::default()
-            .borders(Borders::ALL)
-            .title("Board")
-            .title_alignment(Alignment::Left)
-            .border_type(BorderType::Rounded),
-        chunks[1],
-    );
+    draw_board(f, game, chunks[1]);
     f.render_widget(
         Block::default()
             .borders(Borders::ALL)
@@ -70,4 +67,50 @@ fn draw_stats<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
         .border_type(BorderType::Rounded);
     let paragraph = Paragraph::new(text).block(block).wrap(Wrap { trim: true });
     f.render_widget(paragraph, area);
+}
+
+fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
+    let c = Canvas::default()
+        .marker(symbols::Marker::Braille)
+        .block(
+            Block::default()
+                .title("Board")
+                .borders(Borders::ALL)
+                .title_alignment(Alignment::Left)
+                .border_type(BorderType::Rounded),
+        )
+        .paint(|ctx| {
+            // ctx.draw(&Map {
+            //     color: Color::White,
+            //     resolution: MapResolution::High,
+            // });
+            // ctx.layer();
+            for c in game.board.cities.values() {
+                ctx.draw(&Rectangle {
+                    x: ((c.x - 350) / 10) as f64 * 4.0,
+                    y: ((c.y - 350) / 10) as f64 * 3.0,
+                    width: 5.0,
+                    height: 5.0,
+                    color: {
+                        if let Owner::Player(name) = &c.owner {
+                            if name == "p1" {
+                                Color::LightMagenta
+                            } else {
+                                Color::LightBlue
+                            }
+                        } else {
+                            Color::LightGreen
+                        }
+                    },
+                });
+                ctx.print(
+                    ((c.x - 350) / 10) as f64 * 4.0,
+                    ((c.y - 350) / 10) as f64 * 3.0,
+                    Spans::from(format!("{}", c.units)),
+                )
+            }
+        })
+        .x_bounds([-180.0, 180.0])
+        .y_bounds([-90.0, 90.0]);
+    f.render_widget(c, area);
 }
