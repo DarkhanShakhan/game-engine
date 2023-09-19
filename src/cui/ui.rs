@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use tui::{
     backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
@@ -7,7 +5,7 @@ use tui::{
     symbols,
     text::{Span, Spans},
     widgets::{
-        canvas::{Canvas, Line, Map, MapResolution, Rectangle},
+        canvas::{Canvas, Line, Rectangle},
         Block, BorderType, Borders, Paragraph, Wrap,
     },
     Frame,

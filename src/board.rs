@@ -93,6 +93,7 @@ impl Board {
                 }
             }
         }
+        self.moves.retain(|e| !e.is_complete());
         self.tick += 1;
     }
 }

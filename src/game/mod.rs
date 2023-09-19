@@ -1,9 +1,5 @@
-use crate::{
-    board::Board,
-    bot::Bot,
-    city::{City, Owner},
-};
-pub mod position;
+use crate::{board::Board, bot::Bot, city::Owner};
+// pub mod position;
 
 pub struct Game {
     pub board: Board,
