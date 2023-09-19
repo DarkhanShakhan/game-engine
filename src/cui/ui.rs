@@ -11,7 +11,7 @@ use tui::{
     Frame,
 };
 
-use crate::{city::Owner, game::Game};
+use crate::game::{city::Owner, Game};
 
 pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
     let chunks = Layout::default()

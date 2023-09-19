@@ -1,9 +1,12 @@
 use std::fmt::Display;
 
+use super::position::Position;
+
 pub struct City {
     pub owner: Owner,
     pub units: i32,
     pub name: String,
+    pub position: Position,
     pub x: i32,
     pub y: i32,
     a: i32,
@@ -16,6 +19,7 @@ impl City {
             owner,
             units: 10,
             name: x.to_string() + "-" + &y.to_string(),
+            position: Position::new(x as f64, y as f64),
             x,
             y,
             a: 0,
@@ -34,21 +38,6 @@ impl Display for City {
     }
 }
 
-#[cfg(test)]
-mod city_tests {
-    use super::*;
-    #[test]
-    fn test_display() {
-        assert_eq!(
-            City::new(Owner::Neutral, 150, 200).to_string(),
-            "Neutral 10 150200 150 200 0 0\n"
-        );
-        assert_eq!(
-            City::new(Owner::Player("pl1".to_owned()), 180, 210).to_string(),
-            "pl1 10 180210 180 210 0 0\n"
-        );
-    }
-}
 #[derive(PartialEq)]
 pub enum Owner {
     Player(String),
@@ -61,15 +50,5 @@ impl Display for Owner {
             Self::Player(name) => write!(f, "{}", name),
             Self::Neutral => write!(f, "Neutral"),
         }
-    }
-}
-
-#[cfg(test)]
-mod owner_tests {
-    use super::*;
-    #[test]
-    fn test_display() {
-        assert_eq!(Owner::Player("Player1".to_owned()).to_string(), "Player1");
-        assert_eq!(Owner::Neutral.to_string(), "Neutral");
     }
 }

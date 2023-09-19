@@ -1,8 +1,4 @@
-mod board;
-mod bot;
-mod city;
 mod game;
-mod movement;
 use std::{error::Error, time::Duration};
 
 use cui::crossterm::run;

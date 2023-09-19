@@ -1,9 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use crate::{
-    city::{City, Owner},
-    movement::Movement,
-};
+use super::{city::City, movement::Movement, *};
 
 pub struct Board {
     pub city_num: i32,

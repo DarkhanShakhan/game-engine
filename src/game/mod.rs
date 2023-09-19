@@ -1,5 +1,10 @@
-use crate::{board::Board, bot::Bot, city::Owner};
-// pub mod position;
+use self::{board::Board, bot::Bot, city::Owner};
+
+pub mod board;
+pub mod bot;
+pub mod city;
+pub mod movement;
+pub mod position;
 
 pub struct Game {
     pub board: Board,
