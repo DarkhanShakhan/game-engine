@@ -10,8 +10,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("{:?}", cli);
     run(
         Duration::from_millis(cli.tick_rate_ms),
-        &cli.bot_1,
-        &cli.bot_2,
+        &cli.player1,
+        &cli.player2,
     )?;
     Ok(())
 }
@@ -21,8 +21,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 struct Cli {
     #[arg(short, long, default_value_t = 500)]
     tick_rate_ms: u64,
-    #[arg(long)]
-    bot_1: String,
-    #[arg(long)]
-    bot_2: String,
+    #[arg(long, default_value_t = String::from("./bots/bot"))]
+    player1: String,
+    #[arg(long, default_value_t = String::from("./bots/bot"))]
+    player2: String,
 }
