@@ -83,10 +83,10 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
                     if let Some(from) = game.board.cities.get(&m.from_city) {
                         if game.board.cities.get(&m.to_city).is_some() {
                             ctx.draw(&Line {
-                                x1: ((from.x - 350) / 10) as f64 * 4.0,
-                                y1: ((from.y - 350) / 10) as f64 * 3.0,
-                                x2: ((m.x.ceil() - 350.0) / 10.0) * 4.0,
-                                y2: ((m.y.ceil() - 350.0) / 10.0) * 3.0,
+                                x1: ((from.position.x - 350.0) / 10.0) * 4.0,
+                                y1: ((from.position.y - 350.0) / 10.0) * 3.0,
+                                x2: ((m.position.x.ceil() - 350.0) / 10.0) * 4.0,
+                                y2: ((m.position.y.ceil() - 350.0) / 10.0) * 3.0,
                                 color: {
                                     if m.from_owner == "p1" {
                                         Color::LightMagenta
@@ -102,8 +102,8 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
             ctx.layer();
             for c in game.board.cities.values() {
                 ctx.draw(&Rectangle {
-                    x: ((c.x - 350) / 10) as f64 * 4.0,
-                    y: ((c.y - 350) / 10) as f64 * 3.0,
+                    x: ((c.position.x - 350.0) / 10.0) * 4.0,
+                    y: ((c.position.y - 350.0) / 10.0) * 3.0,
                     width: 5.0,
                     height: 5.0,
                     color: {
@@ -119,8 +119,8 @@ fn draw_board<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
                     },
                 });
                 ctx.print(
-                    ((c.x - 350) / 10) as f64 * 4.0,
-                    ((c.y - 350) / 10) as f64 * 3.0,
+                    ((c.position.x - 350.0) / 10.0) * 4.0,
+                    ((c.position.y - 350.0) / 10.0) * 3.0,
                     Spans::from(format!("{}", c.units)),
                 )
             }

@@ -7,8 +7,6 @@ pub struct City {
     pub units: i32,
     pub name: String,
     pub position: Position,
-    pub x: i32,
-    pub y: i32,
     a: i32,
     b: i32,
 }
@@ -20,8 +18,6 @@ impl City {
             units: 10,
             name: x.to_string() + "-" + &y.to_string(),
             position: Position::new(x as f64, y as f64),
-            x,
-            y,
             a: 0,
             b: 0,
         }
@@ -33,7 +29,7 @@ impl Display for City {
         writeln!(
             f,
             "{} {} {} {} {} {} {}",
-            self.owner, self.units, self.name, self.x, self.y, self.a, self.b
+            self.owner, self.units, self.name, self.position.x, self.position.y, self.a, self.b
         )
     }
 }

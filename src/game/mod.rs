@@ -12,10 +12,10 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new() -> Self {
+    pub fn new(bot_1_path: &str, bot_2_path: &str) -> Self {
         let mut board = Board::default();
-        let bot_2 = Bot::new("./bots/bot", "p2");
-        let bot_1 = Bot::new("./bots/bot", "p1");
+        let bot_2 = Bot::new(bot_1_path, "p2");
+        let bot_1 = Bot::new(bot_2_path, "p1");
         board.set_city_owner("100-100", Owner::Player("p1".to_string()));
         board.set_city_owner("600-600", Owner::Player("p2".to_string()));
         Game {

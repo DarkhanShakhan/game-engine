@@ -18,13 +18,13 @@ use crate::game::Game;
 
 use super::ui::draw;
 
-pub fn run(tick_rate: Duration) -> Result<(), Box<dyn Error>> {
+pub fn run(tick_rate: Duration, bot_1_path: &str, bot_2_path: &str) -> Result<(), Box<dyn Error>> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
-    let res = run_game(&mut terminal, Game::new(), tick_rate);
+    let res = run_game(&mut terminal, Game::new(bot_1_path, bot_2_path), tick_rate);
     disable_raw_mode()?;
     execute!(
         terminal.backend_mut(),
