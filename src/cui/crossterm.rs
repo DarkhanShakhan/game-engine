@@ -24,7 +24,7 @@ pub fn run(tick_rate: Duration, bot_1_path: &str, bot_2_path: &str) -> Result<()
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
-    let res = run_game(&mut terminal, Game::new(bot_1_path, bot_2_path), tick_rate);
+    let res = run_game(&mut terminal, bot_1_path, bot_2_path, tick_rate);
     disable_raw_mode()?;
     execute!(
         terminal.backend_mut(),
@@ -42,10 +42,13 @@ pub fn run(tick_rate: Duration, bot_1_path: &str, bot_2_path: &str) -> Result<()
 
 fn run_game<B: Backend>(
     terminal: &mut Terminal<B>,
-    mut game: Game,
+    bot_1_path: &str,
+    bot_2_path: &str,
     tick_rate: Duration,
 ) -> io::Result<()> {
+    let mut game = Game::new(bot_1_path, bot_2_path);
     let mut last_tick = Instant::now();
+    let mut is_pause = false;
     loop {
         //TODO: draw
         terminal.draw(|f| draw(f, &mut game))?;
@@ -56,13 +59,27 @@ fn run_game<B: Backend>(
             if let Event::Key(key) = event::read()? {
                 match key.code {
                     KeyCode::Esc => break,
-                    KeyCode::Left => game.on_left(),
-                    KeyCode::Right => game.on_right(),
+                    KeyCode::Left => {
+                        if is_pause {
+                            game.on_left()
+                        }
+                    }
+                    KeyCode::Right => {
+                        if is_pause {
+                            game.on_right()
+                        }
+                    }
+                    KeyCode::Down => {
+                        is_pause = !is_pause;
+                    }
+                    KeyCode::Enter => {
+                        game = Game::new(bot_1_path, bot_2_path);
+                    }
                     _ => {}
                 }
             }
         }
-        if last_tick.elapsed() >= tick_rate && !game.is_finished() {
+        if last_tick.elapsed() >= tick_rate && !game.is_finished() && !is_pause {
             game.tick();
             last_tick = Instant::now();
         }

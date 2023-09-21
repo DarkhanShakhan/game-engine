@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use super::position::Position;
 
+#[derive(Clone)]
 pub struct City {
     pub owner: Owner,
     pub units: i32,
@@ -34,7 +35,7 @@ impl Display for City {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub enum Owner {
     Player(String),
     Neutral,

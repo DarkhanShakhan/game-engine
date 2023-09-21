@@ -4,6 +4,7 @@ use crate::game::city::City;
 
 use super::position::Position;
 
+#[derive(Clone)]
 pub struct Movement {
     pub from_city: String,
     pub from_owner: String,
@@ -11,7 +12,7 @@ pub struct Movement {
     pub to_owner: String,
     pub position: Position,
     step: Position,
-    ticks_to_finish: i32,
+    pub ticks_to_finish: i32,
     pub units: i32,
 }
 

@@ -2,6 +2,7 @@ use std::{collections::HashMap, fmt::Display};
 
 use super::{city::City, movement::Movement, *};
 
+#[derive(Clone)]
 pub struct Board {
     pub city_num: i32,
     pub cities: HashMap<String, City>,

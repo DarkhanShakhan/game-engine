@@ -7,7 +7,6 @@ mod cui;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
-    println!("{:?}", cli);
     run(
         Duration::from_millis(cli.tick_rate_ms),
         &cli.player1,

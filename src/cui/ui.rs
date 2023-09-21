@@ -26,18 +26,65 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
         )
         .split(f.size());
     draw_stats(f, game, chunks[0]);
-    draw_board(f, game, chunks[1]);
-    f.render_widget(
-        Block::default()
-            .borders(Borders::ALL)
-            .title("Control")
-            .title_alignment(Alignment::Left)
-            .border_type(BorderType::Rounded),
-        chunks[2],
-    );
+    draw_middle(f, game, chunks[1]);
+    draw_control(f, chunks[2]);
 }
 
-// fn draw_info()
+fn draw_control<B: Backend>(f: &mut Frame<B>, area: Rect) {
+    let text = Spans::from(Span::styled(
+        "[Down] - pause, [Esc] - quit, [Enter] - restart",
+        Style::default().fg(Color::DarkGray),
+    ));
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .title("Control")
+        .title_alignment(Alignment::Left)
+        .border_type(BorderType::Rounded);
+    let paragraph = Paragraph::new(text).block(block).wrap(Wrap { trim: true });
+    f.render_widget(paragraph, area);
+}
+
+fn draw_middle<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
+    let chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(70), Constraint::Percentage(30)].as_ref())
+        .split(area);
+    draw_board(f, game, chunks[0]);
+    draw_logs(f, game, chunks[1]);
+}
+
+fn draw_logs<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
+    let mut text = vec![Spans::from(Span::styled(
+        "Movements",
+        Style::default().bg(Color::Cyan),
+    ))];
+
+    for m in &game.board.moves {
+        if !m.is_complete() {
+            text.push(Spans::from(Span::styled(
+                format!(
+                    "From: {} To: {} Units: {} Tick: {}",
+                    m.from_city, m.to_city, m.units, m.ticks_to_finish
+                ),
+                Style::default().fg({
+                    if m.from_owner == "p1" {
+                        Color::LightMagenta
+                    } else {
+                        Color::LightBlue
+                    }
+                }),
+            )));
+        }
+    }
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .title("Logs")
+        .title_alignment(Alignment::Left)
+        .border_type(BorderType::Rounded);
+    let paragraph = Paragraph::new(text).block(block).wrap(Wrap { trim: true });
+    f.render_widget(paragraph, area);
+}
+
 fn draw_stats<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
     let stats = game.stats();
     let text = vec![Spans::from(vec![

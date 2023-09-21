@@ -15,13 +15,13 @@ impl Bot {
     pub fn new(exec_path: &str, name: &str) -> Bot {
         let mut child = Command::new(exec_path)
             .stdin(Stdio::piped())
+            .stderr(Stdio::piped())
             .stdout(Stdio::piped())
             .spawn()
             .expect("Failed to start bot process");
 
         let writer = BufWriter::new(child.stdin.take().unwrap());
         let reader = BufReader::new(child.stdout.take().unwrap());
-
         Bot {
             name: name.to_string(),
             child,
@@ -47,6 +47,7 @@ impl Bot {
             .split(' ')
             .map(|x| x.parse().unwrap())
             .collect();
+
         Some((coords[0], coords[1], coords[2], coords[3]))
     }
 }
