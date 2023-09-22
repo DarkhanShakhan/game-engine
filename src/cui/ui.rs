@@ -32,7 +32,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &mut Game) {
 
 fn draw_control<B: Backend>(f: &mut Frame<B>, area: Rect) {
     let text = Spans::from(Span::styled(
-        "[Down] - pause, [Esc] - quit, [Enter] - restart",
+        "[Down] - pause, [Esc] - quit, [Enter] - restart, [Left] - backward, [Right] - forward",
         Style::default().fg(Color::DarkGray),
     ));
     let block = Block::default()

@@ -50,11 +50,10 @@ fn run_game<B: Backend>(
     let mut last_tick = Instant::now();
     let mut is_pause = false;
     loop {
-        //TODO: draw
         terminal.draw(|f| draw(f, &mut game))?;
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
-            .unwrap_or_else(|| Duration::from_secs(0));
+            .unwrap_or_else(|| Duration::from_secs(1));
         if poll(timeout)? {
             if let Event::Key(key) = event::read()? {
                 match key.code {
