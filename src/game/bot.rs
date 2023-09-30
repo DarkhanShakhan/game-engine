@@ -9,6 +9,7 @@ pub struct Bot {
     child: std::process::Child,
     writer: BufWriter<std::process::ChildStdin>,
     reader: BufReader<std::process::ChildStdout>,
+    debugger: BufReader<std::process::ChildStderr>,
 }
 
 impl Bot {
@@ -22,11 +23,13 @@ impl Bot {
 
         let writer = BufWriter::new(child.stdin.take().unwrap());
         let reader = BufReader::new(child.stdout.take().unwrap());
+        let debugger = BufReader::new(child.stderr.take().unwrap());
         Bot {
             name: name.to_string(),
             child,
             writer,
             reader,
+            debugger,
         }
     }
 
@@ -49,6 +52,21 @@ impl Bot {
             .collect();
 
         Some((coords[0], coords[1], coords[2], coords[3]))
+    }
+    pub fn get_debug(&mut self) -> Option<String> {
+        let mut log_str = String::new();
+        if let Ok(buf) = self.debugger.fill_buf() {
+            let length = buf.len();
+            if let Ok(s) = std::str::from_utf8(buf) {
+                log_str = s.to_string();
+            }
+            self.debugger.consume(length);
+        }
+
+        if log_str.trim().is_empty() {
+            return None;
+        }
+        Some(log_str)
     }
 }
 

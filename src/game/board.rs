@@ -10,6 +10,8 @@ pub struct Board {
     pub current_player: String,
     pub move_num: i32,
     pub moves: Vec<Movement>,
+    pub p1_logs: String,
+    pub p2_logs: String,
 }
 
 impl Board {
@@ -21,6 +23,8 @@ impl Board {
             current_player: String::new(),
             move_num: 0,
             moves: vec![],
+            p1_logs: String::new(),
+            p2_logs: String::new(),
         }
     }
     pub fn add_city(&mut self, city: City) {

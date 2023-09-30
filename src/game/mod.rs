@@ -33,7 +33,7 @@ impl Game {
             self.board = board.clone();
             return;
         }
-        for b in &mut self.bots {
+        for (ix, b) in self.bots.iter_mut().enumerate() {
             self.board.current_player = b.name.clone();
             if b.send_board(&self.board.to_string()).is_err() {
                 continue;
@@ -44,6 +44,13 @@ impl Game {
                     &format!("{}-{}", coords.0, coords.1),
                     &format!("{}-{}", coords.2, coords.3),
                 )
+            }
+            if let Some(log) = b.get_debug() {
+                if ix == 0 {
+                    self.board.p1_logs = log;
+                } else {
+                    self.board.p2_logs = log;
+                }
             }
         }
         self.board.tick();

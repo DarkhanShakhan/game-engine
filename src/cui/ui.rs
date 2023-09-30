@@ -1,7 +1,7 @@
 use tui::{
     backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
-    style::{Color, Style},
+    style::{Color, Modifier, Style},
     symbols,
     text::{Span, Spans},
     widgets::{
@@ -76,6 +76,31 @@ fn draw_logs<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
             )));
         }
     }
+    text.push(Spans::from(Span::styled(
+        "Debug",
+        Style::default().bg(Color::Cyan),
+    )));
+    text.push(Spans::from(Span::styled(
+        "Player 1",
+        Style::default().bg(Color::LightMagenta),
+    )));
+    text.push(Spans::from(Span::styled(
+        game.board.p1_logs.to_string(),
+        Style::default()
+            .fg(Color::LightMagenta)
+            .add_modifier(Modifier::ITALIC),
+    )));
+    text.push(Spans::from(Span::styled(
+        "Player 2",
+        Style::default().bg(Color::LightBlue),
+    )));
+    text.push(Spans::from(Span::styled(
+        game.board.p2_logs.to_string(),
+        Style::default()
+            .fg(Color::LightBlue)
+            .add_modifier(Modifier::ITALIC),
+    )));
+
     let block = Block::default()
         .borders(Borders::ALL)
         .title("Logs")

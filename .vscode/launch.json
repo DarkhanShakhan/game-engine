@@ -19,7 +19,7 @@
                     "kind": "bin"
                 }
             },
-            "args": ["--bot1=bot-test"],
+            "args": ["--player1=./bots/bot-test"],
             "cwd": "${workspaceFolder}"
         },
         {
