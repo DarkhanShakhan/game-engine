@@ -27,6 +27,111 @@ impl Board {
             p2_logs: String::new(),
         }
     }
+
+    pub fn map_3(pl1: Owner, pl2: Owner) -> Self {
+        let city_coords = vec![
+            (400, 500),
+            (200, 300),
+            (600, 300),
+            (300, 473),
+            (227, 400),
+            (227, 200),
+            (300, 127),
+            (573, 400),
+            (573, 200),
+            (500, 127),
+            (500, 473),
+            (400, 100),
+        ];
+        let mut out = Board::new();
+        for coord in city_coords {
+            out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
+        }
+        out.set_city_owner("400-100", pl1);
+        out.set_city_owner("400-500", pl2);
+        out
+    }
+
+    pub fn map_4(pl1: Owner, pl2: Owner) -> Self {
+        let city_coords = vec![
+            (600, 500),
+            (300, 200),
+            (400, 300),
+            (500, 400),
+            (600, 100),
+            (500, 200),
+            (300, 400),
+            (200, 500),
+            (200, 100),
+        ];
+        let mut out = Board::new();
+        for coord in city_coords {
+            out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
+        }
+        out.set_city_owner("200-100", pl1);
+        out.set_city_owner("600-500", pl2);
+        out
+    }
+    pub fn map_5(pl1: Owner, pl2: Owner) -> Self {
+        let city_coords = vec![
+            (400, 500),
+            (300, 200),
+            (500, 200),
+            (200, 300),
+            (600, 300),
+            (300, 400),
+            (500, 400),
+            (400, 100),
+        ];
+        let mut out = Board::new();
+        for coord in city_coords {
+            out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
+        }
+        out.set_city_owner("400-100", pl1);
+        out.set_city_owner("200-300", pl2);
+        out
+    }
+
+    pub fn map_2(pl1: Owner, pl2: Owner) -> Self {
+        let city_coords = vec![
+            (200, 300),
+            (200, 500),
+            (400, 100),
+            (400, 300),
+            (400, 500),
+            (600, 100),
+            (600, 300),
+            (600, 500),
+            (200, 100),
+        ];
+        let mut out = Board::new();
+        for coord in city_coords {
+            out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
+        }
+        out.set_city_owner("200-100", pl1);
+        out.set_city_owner("600-500", pl2);
+        out
+    }
+    pub fn map_1(pl1: Owner, pl2: Owner) -> Self {
+        let city_coords = vec![
+            (700, 500),
+            (200, 200),
+            (400, 200),
+            (600, 200),
+            (200, 400),
+            (400, 400),
+            (600, 400),
+            (100, 100),
+        ];
+        let mut out = Board::new();
+        for coord in city_coords {
+            out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
+        }
+        out.set_city_owner("100-100", pl1);
+        out.set_city_owner("700-500", pl2);
+        out
+    }
+
     pub fn add_city(&mut self, city: City) {
         self.cities.insert(city.name.clone(), city);
         self.city_num += 1;
@@ -51,7 +156,6 @@ impl Board {
     pub fn set_city_owner(&mut self, city_name: &str, owner: Owner) {
         if let Some(c) = self.cities.get_mut(city_name) {
             c.owner = owner;
-            c.units = 0;
         }
     }
     pub fn add_move(&mut self, player: Owner, city_from: &str, city_to: &str) {

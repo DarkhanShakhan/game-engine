@@ -15,12 +15,34 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(bot_1_path: &str, bot_2_path: &str) -> Self {
-        let mut board = Board::default();
+    pub fn new(bot_1_path: &str, bot_2_path: &str, map: &str) -> Self {
+        // let mut board = Board::default();
         let bot_1 = Bot::new(bot_1_path, "p1");
         let bot_2 = Bot::new(bot_2_path, "p2");
-        board.set_city_owner("100-100", Owner::Player("p1".to_string()));
-        board.set_city_owner("600-600", Owner::Player("p2".to_string()));
+        // board.set_city_owner("100-100", Owner::Player("p1".to_string()));
+        // board.set_city_owner("600-600", Owner::Player("p2".to_string()));
+        let board: Board = match map {
+            "map2" => Board::map_2(
+                Owner::Player("p1".to_string()),
+                Owner::Player("p2".to_string()),
+            ),
+            "map3" => Board::map_3(
+                Owner::Player("p1".to_string()),
+                Owner::Player("p2".to_string()),
+            ),
+            "map4" => Board::map_4(
+                Owner::Player("p1".to_string()),
+                Owner::Player("p2".to_string()),
+            ),
+            "map5" => Board::map_5(
+                Owner::Player("p1".to_string()),
+                Owner::Player("p2".to_string()),
+            ),
+            _ => Board::map_1(
+                Owner::Player("p1".to_string()),
+                Owner::Player("p2".to_string()),
+            ),
+        };
         Game {
             board_hitory: HashMap::new(),
             board,
@@ -70,12 +92,21 @@ impl Game {
         for c in self.board.cities.values() {
             if let Owner::Player(name) = &c.owner {
                 if name == "p1" {
-                    stats.player_1_count += 1;
+                    stats.player_1_count += c.units as u32;
                 } else {
-                    stats.player_2_count += 1;
+                    stats.player_2_count += c.units as u32;
                 }
             } else {
                 stats.neutral_count += 1;
+            }
+        }
+        for m in &self.board.moves {
+            if !m.is_complete() {
+                if m.from_owner == "p1" {
+                    stats.player_1_count += m.units as u32;
+                } else {
+                    stats.player_2_count += m.units as u32;
+                }
             }
         }
         stats

@@ -11,6 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Duration::from_millis(cli.tick_rate_ms),
         &cli.player1,
         &cli.player2,
+        &cli.map,
     )?;
     Ok(())
 }
@@ -24,4 +25,6 @@ struct Cli {
     player1: String,
     #[arg(long, default_value_t = String::from("./bots/bot"))]
     player2: String,
+    #[arg(short,long, default_value_t = String::from("map1"))]
+    map: String,
 }
