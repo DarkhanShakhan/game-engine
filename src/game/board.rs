@@ -69,7 +69,7 @@ impl Board {
             out.add_city(City::new(Owner::Neutral, coord.0, coord.1));
         }
         out.set_city_owner("200-100", pl1);
-        out.set_city_owner("600-500", pl2);
+        out.set_city_owner("600-100", pl2);
         out
     }
     pub fn map_5(pl1: Owner, pl2: Owner) -> Self {

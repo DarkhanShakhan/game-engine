@@ -55,17 +55,18 @@ impl Game {
             self.board = board.clone();
             return;
         }
+        let mut moves = vec![];
         for (ix, b) in self.bots.iter_mut().enumerate() {
             self.board.current_player = b.name.clone();
             if b.send_board(&self.board.to_string()).is_err() {
                 continue;
             };
             if let Some(coords) = b.get_move() {
-                self.board.add_move(
+                moves.push((
                     Owner::Player(self.board.current_player.clone()),
-                    &format!("{}-{}", coords.0, coords.1),
-                    &format!("{}-{}", coords.2, coords.3),
-                )
+                    format!("{}-{}", coords.0, coords.1),
+                    format!("{}-{}", coords.2, coords.3),
+                ))
             }
             if let Some(log) = b.get_debug() {
                 if ix == 0 {
@@ -74,6 +75,9 @@ impl Game {
                     self.board.p2_logs = log;
                 }
             }
+        }
+        for m in moves {
+            self.board.add_move(m.0, &m.1, &m.2)
         }
         self.board.tick();
         self.board_hitory
