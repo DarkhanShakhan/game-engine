@@ -6,6 +6,7 @@ use std::{
 
 pub struct Bot {
     pub name: String,
+    pub filename: String,
     child: std::process::Child,
     writer: BufWriter<std::process::ChildStdin>,
     reader: BufReader<std::process::ChildStdout>,
@@ -26,6 +27,7 @@ impl Bot {
         let debugger = BufReader::new(child.stderr.take().unwrap());
         Bot {
             name: name.to_string(),
+            filename: exec_path.to_string(),
             child,
             writer,
             reader,

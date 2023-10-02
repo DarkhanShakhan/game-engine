@@ -122,11 +122,25 @@ fn draw_stats<B: Backend>(f: &mut Frame<B>, game: &mut Game, area: Rect) {
             Style::default().fg(Color::LightGreen),
         ),
         Span::styled(
-            format!("player1: {} ", stats.player_1_count),
+            format!(
+                "{}: {} ",
+                game.bots[0]
+                    .filename
+                    .strip_prefix("./bots/")
+                    .unwrap_or_else(|| &game.bots[0].filename),
+                stats.player_1_count
+            ),
             Style::default().fg(Color::LightMagenta),
         ),
         Span::styled(
-            format!("player2: {} ", stats.player_2_count),
+            format!(
+                "{}: {} ",
+                game.bots[1]
+                    .filename
+                    .strip_prefix("./bots/")
+                    .unwrap_or_else(|| &game.bots[0].filename),
+                stats.player_2_count
+            ),
             Style::default().fg(Color::LightBlue),
         ),
     ])];
